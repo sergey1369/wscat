@@ -1,16 +1,14 @@
 # Makefile
 
 CXXFLAGS=-Wall -g
-LIBS=-lPocoFoundation -lPocoNet -lPocoNetSSL -lPocoUtil
+LDLIBS=-lPocoFoundation -lPocoNet -lPocoNetSSL -lPocoUtil
 
-wscat: wscat.cpp
-	$(CXX) $(CXXFLAGS) -o wscat wscat.cpp $(LIBS)
+all: wscat wscatd
 
 clean:
-	rm -f wscat
+	rm -f wscat wscatd
 
-run: wscat
-	./wscat http://localhost:8000
-
-gdb: wscat
-	gdb wscat -ex 'r http://localhost:8000'
+run: wscat wscatd
+	./wscatd 8000 22
+	./wscat ws://localhost:8000/
+	pkill ./wscatd

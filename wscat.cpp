@@ -53,7 +53,7 @@ int main(int argc,char *argv[])
 {
     try {
         WebSocket ws=connect(argc,argv);
-        const int sz0=4096,sz1=32768;
+        const int sz0=4096,sz1=65536;
         char data[4096+sz1],*buf=(char *)((1+(size_t)data/4096)*4096);
         struct pollfd fds[2] = { {0,POLLIN,0}, {ws.impl()->sockfd(),POLLIN,0} };
         int result,flags;
@@ -69,9 +69,9 @@ int main(int argc,char *argv[])
                 if (result<0) {
                     cerr << "wscat: Error in read(stdin)\n";
                     break;
-                } else if (result>0) 
+                } else if (result>0) {
                     ws.sendFrame(buf, result, WebSocket::FRAME_BINARY);
-                else
+                } else
                     break;
             }
 
@@ -96,10 +96,8 @@ int main(int argc,char *argv[])
                     break;
                 else
                     cerr<<"wscat: receiveFrame problem!\n";
-
             }
         }
-
         ws.close();
     }
     catch (const WebSocketException& e) {
